@@ -1,3 +1,5 @@
+import { SignedOut, SignInButton, SignUpButton } from "@clerk/clerk-react";
+
 export default function Home() {
   return (
     <div className="flex items-center justify-center min-h-screen">
@@ -9,9 +11,20 @@ export default function Home() {
           <p className="text-lg sm:text-xl md:text-2xl text-gray-600">
             Let's connect with each other!
           </p>
-          <button className="bg-[#3190F8] hover:bg-blue-600 cursor-pointer text-white px-6 py-3 md:px-8 md:py-4 rounded-md text-base md:text-lg font-medium transition-colors duration-300">
-            Get Started
-          </button>
+          <SignedOut>
+            <div className="space-x-4">
+              <SignInButton mode="modal">
+                <button className="bg-[#3190F8] hover:bg-blue-600 cursor-pointer text-white px-4 py-2 md:px-8 md:py-4 rounded-md text-base md:text-lg font-medium transition-colors duration-300">
+                  Login
+                </button>
+              </SignInButton>
+              <SignUpButton mode="modal">
+                <button className=" cursor-pointer border-2 hover:bg-gray-200 border-gray-400 px-3 py-1.5 md:px-8 md:py-4 rounded-md text-base md:text-lg font-medium transition-colors duration-300">
+                  SignUp
+                </button>
+              </SignUpButton>
+            </div>
+          </SignedOut>
         </div>
       </div>
     </div>
