@@ -1,4 +1,9 @@
-import { SignedOut, SignInButton, SignUpButton } from "@clerk/clerk-react";
+import {
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  SignUpButton,
+} from "@clerk/clerk-react";
 
 export default function Home() {
   return (
@@ -25,6 +30,11 @@ export default function Home() {
               </SignUpButton>
             </div>
           </SignedOut>
+          <SignedIn>
+            <button className="bg-[#3190F8] hover:bg-blue-600 cursor-pointer text-white px-4 py-2 md:px-8 md:py-4 rounded-md text-base md:text-lg font-medium transition-colors duration-300">
+              Get Started
+            </button>
+          </SignedIn>
         </div>
       </div>
     </div>
