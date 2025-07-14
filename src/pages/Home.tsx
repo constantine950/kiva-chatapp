@@ -4,6 +4,7 @@ import {
   SignInButton,
   SignUpButton,
 } from "@clerk/clerk-react";
+import { Link } from "react-router";
 
 export default function Home() {
   return (
@@ -31,9 +32,12 @@ export default function Home() {
             </div>
           </SignedOut>
           <SignedIn>
-            <button className="bg-[#3190F8] hover:bg-blue-600 cursor-pointer text-white px-4 py-2 md:px-8 md:py-4 rounded-md text-base md:text-lg font-medium transition-colors duration-300">
+            <Link
+              to="/dashboard"
+              className="bg-[#3190F8] hover:bg-blue-600 cursor-pointer text-white px-4 py-2 md:px-8 md:py-4 rounded-md text-base md:text-lg font-medium transition-colors duration-300"
+            >
               Get Started
-            </button>
+            </Link>
           </SignedIn>
         </div>
       </div>
