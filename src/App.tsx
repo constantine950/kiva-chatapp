@@ -2,10 +2,11 @@ import { createBrowserRouter, RouterProvider } from "react-router";
 import HomeLayOut from "./components/HomeLayOut";
 import Home from "./pages/Home";
 import AppLayOut from "./components/AppLayOut";
-import Dashboard from "./components/Dashboard";
-import Chat from "./components/Chat";
-import Friends from "./components/Friends";
-import Settings from "./components/Settings";
+import Dashboard from "./pages/Dashboard";
+import Chat from "./pages/Chat";
+import Friends from "./pages/Friends";
+import Settings from "./pages/Settings";
+import ChatDetail from "./pages/ChatDetails";
 
 const router = createBrowserRouter([
   {
@@ -27,6 +28,12 @@ const router = createBrowserRouter([
           {
             path: "chat",
             Component: Chat,
+            children: [
+              {
+                path: ":id",
+                Component: ChatDetail,
+              },
+            ],
           },
           {
             path: "friends",
