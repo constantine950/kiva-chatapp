@@ -26,7 +26,7 @@ export default function Navigation() {
             <MenuItem
               key={item.id}
               item={item}
-              className="text-gray-900 hover:text-[#3190F8] font-medium transition-colors duration-300"
+              className="hover:text-[#3190F8] font-medium transition-colors duration-300"
             />
           ))}
         </ul>
@@ -78,7 +78,7 @@ export default function Navigation() {
                 onClick={toggleMenu}
                 key={item.id}
                 item={item}
-                className="block px-3 py-2 rounded-md text-base font-medium text-gray-900 hover:text-[#3190F8] hover:bg-gray-50"
+                className="block px-3 py-2 rounded-md text-base font-medium  hover:text-[#3190F8] hover:bg-gray-50"
               />
             ))}
 
