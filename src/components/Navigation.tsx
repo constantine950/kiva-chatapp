@@ -7,7 +7,8 @@ import {
 } from "@clerk/clerk-react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
-import { Link } from "react-router";
+import { items } from "../data/menuDataType";
+import MenuItem from "./MenuItem";
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -21,36 +22,13 @@ export default function Navigation() {
       {/* Desktop Navigation */}
       <nav className="hidden md:flex items-center space-x-8">
         <ul className="flex items-center space-x-8">
-          <Link
-            to="/"
-            className="text-gray-900 hover:text-[#3190F8] font-medium transition-colors duration-300"
-          >
-            Home
-          </Link>
-          <Link
-            to="/dashboard"
-            className="text-gray-900 hover:text-[#3190F8] font-medium transition-colors duration-300"
-          >
-            Dashboard
-          </Link>
-          <Link
-            to="/dashboard/chat"
-            className="text-gray-900 hover:text-[#3190F8] font-medium transition-colors duration-300"
-          >
-            Chat
-          </Link>
-          <Link
-            to="dashboard/friends"
-            className="text-gray-900 hover:text-[#3190F8] font-medium transition-colors duration-300"
-          >
-            Friends
-          </Link>
-          <Link
-            to="/dashboard/settings"
-            className="text-gray-900 hover:text-[#3190F8] font-medium transition-colors duration-300"
-          >
-            Settings
-          </Link>
+          {items.map((item) => (
+            <MenuItem
+              key={item.id}
+              item={item}
+              className="text-gray-900 hover:text-[#3190F8] font-medium transition-colors duration-300"
+            />
+          ))}
         </ul>
 
         <div className="flex items-center space-x-4 ml-4">
@@ -95,36 +73,14 @@ export default function Navigation() {
       {isMenuOpen && (
         <div className="md:hidden absolute top-full left-0 right-0 bg-white shadow-md z-50">
           <div className="px-5 py-3 space-y-1">
-            <Link
-              to="/"
-              className="block px-3 py-2 rounded-md text-base font-medium text-gray-900 hover:text-[#3190F8] hover:bg-gray-50"
-            >
-              Home
-            </Link>
-            <Link
-              to="/dashboard"
-              className="block px-3 py-2 rounded-md text-base font-medium text-gray-900 hover:text-[#3190F8] hover:bg-gray-50"
-            >
-              Dashboard
-            </Link>
-            <Link
-              to="/dashboard/chat"
-              className="block px-3 py-2 rounded-md text-base font-medium text-gray-900 hover:text-[#3190F8] hover:bg-gray-50"
-            >
-              Chat
-            </Link>
-            <Link
-              to="/dashboard/friends"
-              className="block px-3 py-2 rounded-md text-base font-medium text-gray-900 hover:text-[#3190F8] hover:bg-gray-50"
-            >
-              Friends
-            </Link>
-            <Link
-              to="/dashboard/settings"
-              className="block px-3 py-2 rounded-md text-base font-medium text-gray-900 hover:text-[#3190F8] hover:bg-gray-50"
-            >
-              Settings
-            </Link>
+            {items.map((item) => (
+              <MenuItem
+                onClick={toggleMenu}
+                key={item.id}
+                item={item}
+                className="block px-3 py-2 rounded-md text-base font-medium text-gray-900 hover:text-[#3190F8] hover:bg-gray-50"
+              />
+            ))}
 
             <SignedOut>
               <div className="pt-4 pb-2 border-t border-gray-200 space-y-3">
