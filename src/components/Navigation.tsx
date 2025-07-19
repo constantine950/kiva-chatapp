@@ -6,16 +6,18 @@ import {
   UserButton,
 } from "@clerk/clerk-react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/solid";
-import { useState } from "react";
 import { items } from "../data/menuDataType";
 import MenuItem from "./MenuItem";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { toggleMenu } from "../redux/navSlice";
 
 export default function Navigation() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const isMenuOpen = useAppSelector((state) => state.nav.isMenuOpen);
+  const dispatch = useAppDispatch();
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
+  function handleToggle() {
+    dispatch(toggleMenu());
+  }
 
   return (
     <>
@@ -58,7 +60,7 @@ export default function Navigation() {
           </div>
         </SignedIn>
         <button
-          onClick={toggleMenu}
+          onClick={handleToggle}
           className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-[#3190F8] focus:outline-none"
         >
           {isMenuOpen ? (
@@ -75,7 +77,7 @@ export default function Navigation() {
           <div className="px-5 py-3 space-y-1">
             {items.map((item) => (
               <MenuItem
-                onClick={toggleMenu}
+                onClick={handleToggle}
                 key={item.id}
                 item={item}
                 className="block px-3 py-2 rounded-md text-base font-medium  hover:text-[#3190F8] hover:bg-gray-50"
