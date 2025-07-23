@@ -9,15 +9,36 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/solid";
 import { items } from "../data/menuDataType";
 import MenuItem from "./MenuItem";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { toggleMenu } from "../redux/navSlice";
+import { setMenuOpen, toggleMenu } from "../redux/navSlice";
+import { useEffect, useRef, type RefObject } from "react";
 
 export default function Navigation() {
+  const menuRef = useRef<HTMLDivElement>(null);
   const isMenuOpen = useAppSelector((state) => state.nav.isMenuOpen);
   const dispatch = useAppDispatch();
 
   function handleToggle() {
     dispatch(toggleMenu());
   }
+
+  function useClickOutside(ref: RefObject<HTMLDivElement | null>) {
+    const dispatch = useAppDispatch();
+
+    useEffect(() => {
+      function handleClickOutside(event: MouseEvent) {
+        if (ref.current && !ref.current.contains(event.target as Node)) {
+          dispatch(setMenuOpen(false));
+        }
+      }
+
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, [ref, dispatch]);
+  }
+
+  useClickOutside(menuRef);
 
   return (
     <>
@@ -73,7 +94,10 @@ export default function Navigation() {
 
       {/* Mobile Navigation */}
       {isMenuOpen && (
-        <div className="md:hidden absolute top-full left-0 right-0 bg-white shadow-md z-50">
+        <div
+          ref={menuRef}
+          className="md:hidden absolute top-full left-0 right-0 bg-white shadow-md z-50"
+        >
           <div className="px-5 py-3 space-y-1">
             {items.map((item) => (
               <MenuItem
