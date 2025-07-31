@@ -3,6 +3,7 @@ import {
   ChatBubbleLeftEllipsisIcon,
   UserGroupIcon,
   Cog6ToothIcon,
+  UserPlusIcon,
 } from "@heroicons/react/24/outline";
 
 export default function Dashboard() {
@@ -18,6 +19,12 @@ export default function Dashboard() {
       description: "Manage your friends list and see who's online.",
       link: "/dashboard/friends",
       icon: <UserGroupIcon className="w-6 h-6 text-green-600" />,
+    },
+    {
+      title: "Add Friends",
+      description: "Browse users and send friend requests.",
+      link: "/dashboard/addfriends",
+      icon: <UserPlusIcon className="w-6 h-6 text-purple-600" />,
     },
     {
       title: "Settings",

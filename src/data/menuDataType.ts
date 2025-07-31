@@ -27,6 +27,11 @@ export const items: MenuItems[] = [
   },
   {
     id: 5,
+    link: "/dashboard/addfriends",
+    text: "Discover",
+  },
+  {
+    id: 6,
     link: "/dashboard/settings",
     text: "Settings",
   },
