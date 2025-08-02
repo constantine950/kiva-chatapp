@@ -35,16 +35,18 @@ export const syncUserToSupabase = async (user: User | null | undefined) => {
       console.error("Insert error:", insertError.message);
     }
   }
+
+  return null;
 };
 
-export const getRandomUsers = async (user: User) => {
-  const clerkId = user.id;
+export const getRandomUsers = async (user: User | null | undefined) => {
+  const clerkId = user?.id;
 
   const { data, error } = await supabase
     .from("Users")
     .select("*")
     .neq("clerkId", clerkId)
-    .order("RANDOM()");
+    .order("created_at", { ascending: true });
 
   if (error) {
     console.error(error.message);

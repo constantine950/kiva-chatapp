@@ -8,9 +8,9 @@ import Friends from "./pages/Friends";
 import Settings from "./pages/Settings";
 import ChatDetail from "./pages/ChatDetails";
 import { useUser } from "@clerk/clerk-react";
-import { useEffect } from "react";
 import AddFriends from "./pages/AddFriends";
 import { syncUserToSupabase } from "./lib/dbqueries";
+import { useQuery } from "@tanstack/react-query";
 
 const router = createBrowserRouter([
   {
@@ -60,9 +60,12 @@ const router = createBrowserRouter([
 function App() {
   const { user } = useUser();
 
-  useEffect(() => {
-    syncUserToSupabase(user);
-  }, [user]);
+  useQuery({
+    queryKey: ["synUser", user?.id],
+    queryFn: () => syncUserToSupabase(user),
+    enabled: !!user,
+    staleTime: Infinity,
+  });
 
   return <RouterProvider router={router} />;
 }

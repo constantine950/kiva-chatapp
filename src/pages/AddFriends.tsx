@@ -1,25 +1,16 @@
-import { useEffect, useState } from "react";
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  avatarUrl?: string;
-}
+import { useUser } from "@clerk/clerk-react";
+import { useQuery } from "@tanstack/react-query";
+import { getRandomUsers } from "../lib/dbqueries";
+import { useState } from "react";
 
 export default function AddFriends() {
-  const [users, setUsers] = useState<User[]>([]);
   const [friends, setFriends] = useState<string[]>([]); // store user IDs
+  const { user } = useUser();
 
-  // Mock fetch (replace with Supabase or Clerk user list)
-  useEffect(() => {
-    const mockUsers: User[] = [
-      { id: "1", name: "Ada Lovelace", email: "ada@example.com" },
-      { id: "2", name: "Grace Hopper", email: "grace@example.com" },
-      { id: "3", name: "Alan Turing", email: "alan@example.com" },
-    ];
-    setUsers(mockUsers);
-  }, []);
+  const { data: users } = useQuery({
+    queryKey: ["addFriends", user?.id],
+    queryFn: () => getRandomUsers(user),
+  });
 
   const handleAddFriend = (id: string) => {
     if (!friends.includes(id)) {
@@ -32,7 +23,7 @@ export default function AddFriends() {
       <h2 className="text-xl font-semibold mb-6">Discover Friends</h2>
 
       <ul className="space-y-4">
-        {users.map((user) => {
+        {users?.map((user) => {
           const isFriend = friends.includes(user.id);
 
           return (
@@ -41,9 +32,9 @@ export default function AddFriends() {
               className="flex items-center justify-between p-4 bg-white shadow rounded-lg"
             >
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-gray-200" />
+                <img src={user.image} className="w-10 h-10 rounded-full" />
                 <div>
-                  <p className="font-medium">{user.name}</p>
+                  <p className="font-medium">{user.full_name}</p>
                   <p className="text-sm text-gray-500">{user.email}</p>
                 </div>
               </div>
