@@ -23,13 +23,15 @@ export const syncUserToSupabase = async (user: User | null | undefined) => {
   }
 
   if (!existingUser) {
-    const { error: insertError } = await supabase.from("Users").insert({
-      full_name: user.fullName,
-      email: user.emailAddresses[0].emailAddress,
-      username: user.username,
-      clerkId: user.id,
-      image: user.imageUrl,
-    });
+    const { error: insertError } = await supabase.from("Users").insert([
+      {
+        full_name: user.fullName,
+        email: user.emailAddresses[0].emailAddress,
+        username: user.username,
+        clerkId: user.id,
+        image: user.imageUrl,
+      },
+    ]);
 
     if (insertError) {
       console.error("Insert error:", insertError.message);
@@ -52,4 +54,20 @@ export const getRandomUsers = async (user: User | null | undefined) => {
     console.error(error.message);
   }
   return data;
+};
+
+export const addFriends = async (
+  user: User | null | undefined,
+  friend_id: string
+) => {
+  const { data: addedFriend, error } = await supabase.from("Friends").insert({
+    user_id: user?.id,
+    friend_id,
+  });
+
+  if (error) {
+    console.error(error.message);
+  }
+
+  return addedFriend;
 };

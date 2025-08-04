@@ -1,6 +1,6 @@
 import { useUser } from "@clerk/clerk-react";
-import { useQuery } from "@tanstack/react-query";
-import { getRandomUsers } from "../lib/dbqueries";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { addFriends, getRandomUsers } from "../lib/dbqueries";
 import { useState } from "react";
 
 export default function AddFriends() {
@@ -13,9 +13,15 @@ export default function AddFriends() {
     enabled: !!user, // prevents running query if user is undefined
   });
 
+  const { mutate: addFriend } = useMutation({
+    mutationKey: ["addfriend"],
+    mutationFn: (id: string) => addFriends(user, id),
+  });
+
   const handleAddFriend = (id: string) => {
     if (!friends.includes(id)) {
       setFriends((prev) => [...prev, id]);
+      addFriend(id);
     }
   };
 
