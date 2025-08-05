@@ -56,18 +56,48 @@ export const getRandomUsers = async (user: User | null | undefined) => {
   return data;
 };
 
-export const addFriends = async (
-  user: User | null | undefined,
-  friend_id: string
-) => {
-  const { data: addedFriend, error } = await supabase.from("Friends").insert({
-    user_id: user?.id,
-    friend_id,
-  });
+export const addFriends = async (userId: string, friend_id: string) => {
+  const { data: addedFriend, error } = await supabase.from("Friends").insert([
+    {
+      user_id: userId,
+      friend_id,
+    },
+  ]);
 
   if (error) {
     console.error(error.message);
   }
+  if (!addedFriend) throw new Error("No friend data returned from Supabase");
 
-  return addedFriend;
+  return addedFriend as {
+    id: number;
+    user_id: string;
+    friend_id: number;
+    created_at: string;
+  };
+};
+
+export const updateUser = async (friend_id: string) => {
+  const { error: updateError, data: updatedData } = await supabase
+    .from("Users")
+    .update({
+      isFriend: true,
+    })
+    .eq("id", friend_id);
+
+  if (updateError) {
+    console.error(updateError.message);
+  }
+  if (!updatedData) throw new Error("not able to update friend");
+
+  return updatedData as {
+    id: number;
+    full_name: string;
+    email: string;
+    isFriend: boolean;
+    image: string;
+    clerkId: string;
+    created_at: string;
+    username: string;
+  };
 };

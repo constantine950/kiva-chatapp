@@ -1,7 +1,31 @@
 import { useUser } from "@clerk/clerk-react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { addFriends, getRandomUsers } from "../lib/dbqueries";
+import { addFriends, getRandomUsers, updateUser } from "../lib/dbqueries";
 import { useState } from "react";
+
+type AddFriendInput = {
+  currentUserId: string;
+  friendId: string;
+};
+
+type AddFriendResponse = {
+  addFriend: {
+    id: number;
+    user_id: string;
+    friend_id: number;
+    created_at: string;
+  };
+  updatedFriend: {
+    id: number;
+    full_name: string;
+    email: string;
+    isFriend: boolean;
+    image: string;
+    clerkId: string;
+    created_at: string;
+    username: string;
+  };
+};
 
 export default function AddFriends() {
   const [friends, setFriends] = useState<string[]>([]);
@@ -10,18 +34,27 @@ export default function AddFriends() {
   const { data: users, isLoading } = useQuery({
     queryKey: ["addFriends", user?.id],
     queryFn: () => getRandomUsers(user),
-    enabled: !!user, // prevents running query if user is undefined
+    enabled: !!user,
   });
 
-  const { mutate: addFriend } = useMutation({
-    mutationKey: ["addfriend"],
-    mutationFn: (id: string) => addFriends(user, id),
+  const { mutate } = useMutation<AddFriendResponse, Error, AddFriendInput>({
+    mutationKey: ["addFriendUpdateFriend"],
+    mutationFn: async ({ currentUserId, friendId }) => {
+      const [addFriend, updatedFriend] = await Promise.all([
+        addFriends(currentUserId, friendId),
+        updateUser(friendId),
+      ]);
+
+      return { addFriend, updatedFriend };
+    },
   });
 
   const handleAddFriend = (id: string) => {
+    if (!user?.id) return;
+
     if (!friends.includes(id)) {
       setFriends((prev) => [...prev, id]);
-      addFriend(id);
+      mutate({ currentUserId: user?.id, friendId: id });
     }
   };
 
@@ -54,7 +87,7 @@ export default function AddFriends() {
                     <p className="text-sm text-gray-500">{user.email}</p>
                   </div>
                 </div>
-                {isFriend ? (
+                {isFriend || user.isFriend ? (
                   <span className="text-green-500 text-sm font-medium">
                     Added
                   </span>
