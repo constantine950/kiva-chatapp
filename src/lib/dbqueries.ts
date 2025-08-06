@@ -101,3 +101,35 @@ export const updateUser = async (friend_id: string) => {
     username: string;
   };
 };
+
+export type Friend = {
+  friend_id: string;
+  Users: {
+    full_name: string;
+    image: string;
+  };
+};
+
+export async function getUserFriends(
+  userId: string | undefined
+): Promise<Friend[]> {
+  if (!userId) return [];
+
+  const { data, error } = await supabase
+    .from("Friends")
+    .select("friend_id, Users:friend_id(full_name,image)")
+    .eq("user_id", userId);
+
+  if (error) {
+    console.error("Error fetching friends:", error.message);
+    return [];
+  }
+
+  // Ensure Users is not an array
+  const normalized = (data ?? []).map((item) => ({
+    ...item,
+    Users: Array.isArray(item.Users) ? item.Users[0] : item.Users,
+  }));
+
+  return normalized;
+}

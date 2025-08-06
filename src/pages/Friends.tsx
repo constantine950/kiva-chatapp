@@ -1,24 +1,33 @@
-import { Link } from "react-router"; // use react-router-dom here
+import { useQuery } from "@tanstack/react-query";
+import { Link } from "react-router"; // Should be 'react-router-dom'
+import { getUserFriends } from "../lib/dbqueries";
+import { useUser } from "@clerk/clerk-react";
+import Spinner from "../components/Spinner";
 
-interface Friend {
-  id: number;
-  name: string;
-  status: "Online" | "Offline";
-}
+type Friend = {
+  friend_id: string;
+  Users: {
+    full_name: string;
+    image: string;
+  } | null;
+};
 
 export default function Friends() {
-  const friends: Friend[] = [
-    // Uncomment this to test empty state
-    // { id: 1, name: "Laney Gray", status: "Online" },
-    // { id: 2, name: "Oscar Thomsen", status: "Offline" },
-    // { id: 3, name: "Jennifer Fritz", status: "Online" },
-  ];
+  const { user } = useUser();
+
+  const { data: friends, isLoading } = useQuery<Friend[]>({
+    queryKey: ["friends"],
+    queryFn: () => getUserFriends(user?.id),
+    enabled: !!user,
+  });
 
   return (
     <div className="pt-20 px-4 sm:px-6 lg:px-8 max-w-2xl mx-auto">
       <h2 className="text-xl font-semibold mb-6">Your Friends</h2>
 
-      {friends.length === 0 ? (
+      {isLoading ? (
+        <Spinner />
+      ) : friends?.length === 0 ? (
         <div className="text-center text-gray-600 space-y-4">
           <p>You haven’t added any friends yet.</p>
           <Link
@@ -30,24 +39,19 @@ export default function Friends() {
         </div>
       ) : (
         <ul className="space-y-4">
-          {friends.map((friend) => (
+          {friends?.map((friend) => (
             <li
-              key={friend.id}
+              key={friend.friend_id}
               className="flex items-center justify-between p-4 bg-white shadow rounded-lg"
             >
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-gray-200" />
+                <img
+                  src={friend.Users?.image}
+                  className="w-10 h-10 rounded-full object-cover"
+                  alt={friend.Users?.full_name}
+                />
                 <div>
-                  <p className="font-medium">{friend.name}</p>
-                  <p
-                    className={`text-sm ${
-                      friend.status === "Online"
-                        ? "text-green-500"
-                        : "text-gray-400"
-                    }`}
-                  >
-                    {friend.status}
-                  </p>
+                  <p className="font-medium">{friend.Users?.full_name}</p>
                 </div>
               </div>
               <button className="text-sm text-blue-500 hover:underline">

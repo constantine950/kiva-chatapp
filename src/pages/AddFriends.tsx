@@ -2,6 +2,7 @@ import { useUser } from "@clerk/clerk-react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { addFriends, getRandomUsers, updateUser } from "../lib/dbqueries";
 import { useState } from "react";
+import Spinner from "../components/Spinner";
 
 type AddFriendInput = {
   currentUserId: string;
@@ -63,9 +64,7 @@ export default function AddFriends() {
       <h2 className="text-xl font-semibold mb-6">Discover Friends</h2>
 
       {isLoading ? (
-        <div className="flex justify-center items-center py-10">
-          <div className="w-6 h-6 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
-        </div>
+        <Spinner />
       ) : (
         <ul className="space-y-4">
           {users?.map((user) => {
