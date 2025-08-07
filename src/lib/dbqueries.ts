@@ -5,11 +5,12 @@ type User = {
   fullName: string | null;
   emailAddresses: { emailAddress: string }[];
   username: string | null;
-  imageUrl: string;
+  image?: string;
 };
 
 export const syncUserToSupabase = async (user: User | null | undefined) => {
   if (!user) return;
+  const pic = `https://i.pravatar.cc/48?u=49947${Date.now()}`;
 
   const { data: existingUser, error: selectError } = await supabase
     .from("Users")
@@ -29,7 +30,7 @@ export const syncUserToSupabase = async (user: User | null | undefined) => {
         email: user.emailAddresses[0].emailAddress,
         username: user.username,
         clerkId: user.id,
-        image: user.imageUrl,
+        image: pic,
       },
     ]);
 
@@ -69,37 +70,25 @@ export const addFriends = async (userId: string, friend_id: string) => {
   }
   if (!addedFriend) throw new Error("No friend data returned from Supabase");
 
-  return addedFriend as {
-    id: number;
-    user_id: string;
-    friend_id: number;
-    created_at: string;
-  };
+  return addedFriend || [];
 };
 
-export const updateUser = async (friend_id: string) => {
-  const { error: updateError, data: updatedData } = await supabase
-    .from("Users")
-    .update({
-      isFriend: true,
-    })
-    .eq("id", friend_id);
+type AddedFriend = {
+  currentUserId: string;
+  otherFriendid: string;
+};
 
-  if (updateError) {
-    console.error(updateError.message);
-  }
-  if (!updatedData) throw new Error("not able to update friend");
+export const checkIsFriend = async ({
+  currentUserId,
+  otherFriendid,
+}: AddedFriend) => {
+  const { data: addedFriend } = await supabase
+    .from("Friends")
+    .select("id")
+    .eq("user_id", currentUserId)
+    .eq("friend_id", otherFriendid);
 
-  return updatedData as {
-    id: number;
-    full_name: string;
-    email: string;
-    isFriend: boolean;
-    image: string;
-    clerkId: string;
-    created_at: string;
-    username: string;
-  };
+  return addedFriend;
 };
 
 export type Friend = {

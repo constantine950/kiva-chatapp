@@ -1,32 +1,9 @@
 import { useUser } from "@clerk/clerk-react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { addFriends, getRandomUsers, updateUser } from "../lib/dbqueries";
+import { addFriends, getRandomUsers } from "../lib/dbqueries";
 import { useState } from "react";
 import Spinner from "../components/Spinner";
-
-type AddFriendInput = {
-  currentUserId: string;
-  friendId: string;
-};
-
-type AddFriendResponse = {
-  addFriend: {
-    id: number;
-    user_id: string;
-    friend_id: number;
-    created_at: string;
-  };
-  updatedFriend: {
-    id: number;
-    full_name: string;
-    email: string;
-    isFriend: boolean;
-    image: string;
-    clerkId: string;
-    created_at: string;
-    username: string;
-  };
-};
+import supabase from "../lib/supabase";
 
 export default function AddFriends() {
   const [friends, setFriends] = useState<string[]>([]);
@@ -34,20 +11,43 @@ export default function AddFriends() {
 
   const { data: users, isLoading } = useQuery({
     queryKey: ["addFriends", user?.id],
-    queryFn: () => getRandomUsers(user),
+    queryFn: async () => {
+      // Step 1: Get random users excluding current user
+      const randomUsers = await getRandomUsers(user);
+
+      // Step 2: Get IDs of users already added as friends
+      const { data: friendsData, error } = await supabase
+        .from("Friends")
+        .select("friend_id")
+        .eq("user_id", user?.id); // Clerk ID
+
+      if (error) {
+        console.error("Error fetching friends:", error);
+        return randomUsers?.map((u) => ({ ...u, isFriend: false }));
+      }
+
+      const friendIds = friendsData?.map((f) => f.friend_id) || [];
+
+      // Step 3: Tag each user with isFriend
+      const usersWithStatus = randomUsers?.map((u) => ({
+        ...u,
+        isFriend: friendIds.includes(u.id),
+      }));
+
+      return usersWithStatus;
+    },
     enabled: !!user,
   });
 
-  const { mutate } = useMutation<AddFriendResponse, Error, AddFriendInput>({
-    mutationKey: ["addFriendUpdateFriend"],
-    mutationFn: async ({ currentUserId, friendId }) => {
-      const [addFriend, updatedFriend] = await Promise.all([
-        addFriends(currentUserId, friendId),
-        updateUser(friendId),
-      ]);
-
-      return { addFriend, updatedFriend };
-    },
+  const { mutate: addFriend } = useMutation({
+    mutationKey: ["addFriend"],
+    mutationFn: ({
+      currentUserId,
+      friendId,
+    }: {
+      currentUserId: string;
+      friendId: string;
+    }) => addFriends(currentUserId, friendId),
   });
 
   const handleAddFriend = (id: string) => {
@@ -55,7 +55,7 @@ export default function AddFriends() {
 
     if (!friends.includes(id)) {
       setFriends((prev) => [...prev, id]);
-      mutate({ currentUserId: user?.id, friendId: id });
+      addFriend({ currentUserId: user.id, friendId: id });
     }
   };
 
