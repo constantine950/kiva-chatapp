@@ -92,7 +92,7 @@ export const checkIsFriend = async ({
 };
 
 export type Friend = {
-  friend_id: string;
+  friend_id: number;
   Users: {
     full_name: string;
     image: string;
@@ -122,3 +122,25 @@ export async function getUserFriends(
 
   return normalized;
 }
+
+export const sendMessage = async (
+  sender_id: string | undefined,
+  receiver_id: number | undefined,
+  text: string
+) => {
+  const { data: message, error: MessageError } = await supabase
+    .from("Messages")
+    .insert([
+      {
+        sender_id,
+        receiver_id,
+        text,
+      },
+    ]);
+
+  if (MessageError) {
+    console.error(MessageError.message);
+  }
+
+  return message;
+};

@@ -2,6 +2,9 @@ import { useState } from "react";
 import { useParams, useNavigate } from "react-router";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import ChatWindow from "../components/ChatWindow";
+import { useMutation } from "@tanstack/react-query";
+import { sendMessage } from "../lib/dbqueries";
+import { useUser } from "@clerk/clerk-react";
 
 type Message = {
   id: number;
@@ -20,11 +23,25 @@ const initalMsg: Message[] = [
 ];
 
 export default function ChatDetail() {
+  const { user } = useUser();
   const { id } = useParams();
   const navigate = useNavigate();
 
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState(initalMsg);
+
+  const { mutate: sendMessages } = useMutation({
+    mutationKey: ["sendMessages"],
+    mutationFn: ({
+      sender_id,
+      receiver_id,
+      text,
+    }: {
+      sender_id: string | undefined;
+      receiver_id: number | undefined;
+      text: string;
+    }) => sendMessage(sender_id, receiver_id, text),
+  });
 
   const handleSend = () => {
     if (!input.trim()) return;
@@ -32,6 +49,7 @@ export default function ChatDetail() {
       ...messages,
       { id: Date.now(), sender: "me", text: input, time: "Now" },
     ]);
+    sendMessages({ sender_id: user?.id, receiver_id: Number(id), text: input });
     setInput("");
   };
 
