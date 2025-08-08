@@ -63,9 +63,9 @@ export default function ChatDetail() {
         >
           <ArrowLeftIcon className="w-5 h-5" />
         </button>
-        <div className="w-10 h-10 rounded-full bg-gray-300" />
+        <img src={user?.imageUrl} className="w-10 h-10 rounded-full" />
         <div>
-          <p className="font-medium">User {id}</p>
+          <p className="font-medium">{user?.fullName}</p>
           <p className="text-sm text-green-500">Active now</p>
         </div>
       </div>

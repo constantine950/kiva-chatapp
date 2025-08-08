@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { Link } from "react-router"; // Should be 'react-router-dom'
+import { Link } from "react-router";
 import { getUserFriends } from "../lib/dbqueries";
 import { useUser } from "@clerk/clerk-react";
 import Spinner from "../components/Spinner";
