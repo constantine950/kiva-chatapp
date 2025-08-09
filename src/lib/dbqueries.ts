@@ -54,14 +54,14 @@ export const getRandomUsers = async (user: User | null | undefined) => {
   if (error) {
     console.error(error.message);
   }
-  return data;
+  return data || [];
 };
 
-export const addFriends = async (userId: string, friend_id: string) => {
+export const addFriends = async (userId: string, friendClerk_id: string) => {
   const { data: addedFriend, error } = await supabase.from("Friends").insert([
     {
       user_id: userId,
-      friend_id,
+      friendClerk_id,
     },
   ]);
 
@@ -92,7 +92,7 @@ export const checkIsFriend = async ({
 };
 
 export type Friend = {
-  friend_id: number;
+  friendClerk_id: string;
   Users: {
     full_name: string;
     image: string;
@@ -106,7 +106,7 @@ export async function getUserFriends(
 
   const { data, error } = await supabase
     .from("Friends")
-    .select("friend_id, Users:friend_id(full_name,image)")
+    .select("friendClerk_id, Users:friendClerk_id(full_name,image)")
     .eq("user_id", userId);
 
   if (error) {
@@ -125,7 +125,7 @@ export async function getUserFriends(
 
 export const sendMessage = async (
   sender_id: string | undefined,
-  receiver_id: number | undefined,
+  receiver_id: string | undefined,
   text: string
 ) => {
   const { data: message, error: MessageError } = await supabase
@@ -143,4 +143,38 @@ export const sendMessage = async (
   }
 
   return message;
+};
+
+export const getFriendDetailAndMessages = async (
+  clerkId: string | undefined,
+  friendId: string
+) => {
+  // 1️⃣ Get friend details
+  const { data: friendRow, error: friendError } = await supabase
+    .from("Users")
+    .select("id, clerkId, full_name, username, email, image")
+    .eq("clerkId", friendId)
+    .single();
+
+  if (friendError) {
+    console.error(friendError.message);
+    return { friend: null, messages: [] };
+  }
+
+  // 2️⃣ Get messages between users
+  const { data: messages, error: messagesError } = await supabase
+    .from("Messages")
+    .select("*")
+    .or(
+      `and(sender_id.eq.${clerkId},receiver_id.eq.${friendId}),` +
+        `and(sender_id.eq.${friendId},receiver_id.eq.${clerkId})`
+    )
+    .order("created_at", { ascending: true });
+
+  if (messagesError) {
+    console.error(messagesError.message);
+    return { friend: friendRow, messages: [] };
+  }
+
+  return { friend: friendRow, messages };
 };

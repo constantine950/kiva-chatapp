@@ -18,7 +18,7 @@ export default function AddFriends() {
       // Step 2: Get IDs of users already added as friends
       const { data: friendsData, error } = await supabase
         .from("Friends")
-        .select("friend_id")
+        .select("friendClerk_id")
         .eq("user_id", user?.id); // Clerk ID
 
       if (error) {
@@ -26,12 +26,11 @@ export default function AddFriends() {
         return randomUsers?.map((u) => ({ ...u, isFriend: false }));
       }
 
-      const friendIds = friendsData?.map((f) => f.friend_id) || [];
-
+      const friendIds = friendsData?.map((f) => f.friendClerk_id) || [];
       // Step 3: Tag each user with isFriend
       const usersWithStatus = randomUsers?.map((u) => ({
         ...u,
-        isFriend: friendIds.includes(u.id),
+        isFriend: friendIds.includes(u.clerkId),
       }));
 
       return usersWithStatus;
@@ -43,11 +42,11 @@ export default function AddFriends() {
     mutationKey: ["addFriend"],
     mutationFn: ({
       currentUserId,
-      friendId,
+      friendClerk_id,
     }: {
       currentUserId: string;
-      friendId: string;
-    }) => addFriends(currentUserId, friendId),
+      friendClerk_id: string;
+    }) => addFriends(currentUserId, friendClerk_id),
   });
 
   const handleAddFriend = (id: string) => {
@@ -55,7 +54,7 @@ export default function AddFriends() {
 
     if (!friends.includes(id)) {
       setFriends((prev) => [...prev, id]);
-      addFriend({ currentUserId: user.id, friendId: id });
+      addFriend({ currentUserId: user.id, friendClerk_id: id });
     }
   };
 
@@ -68,7 +67,7 @@ export default function AddFriends() {
       ) : (
         <ul className="space-y-4">
           {users?.map((user) => {
-            const isFriend = friends.includes(user.id);
+            const isFriend = friends.includes(user.clerkId);
 
             return (
               <li
@@ -92,7 +91,7 @@ export default function AddFriends() {
                   </span>
                 ) : (
                   <button
-                    onClick={() => handleAddFriend(user.id)}
+                    onClick={() => handleAddFriend(user.clerkId)}
                     className="text-sm text-blue-500 hover:underline"
                   >
                     Add Friend

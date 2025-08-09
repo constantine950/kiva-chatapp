@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 
 type Friend = {
-  friend_id: number;
+  friendClerk_id: string;
   Users: {
     full_name: string;
     image: string;
@@ -11,8 +11,8 @@ type Friend = {
 export default function FriendList(friend: Friend) {
   return (
     <Link
-      to={`/dashboard/chat/${friend.friend_id}`}
-      key={friend.friend_id}
+      to={`/dashboard/chat/${friend.friendClerk_id}`}
+      key={friend.friendClerk_id}
       className="flex items-center justify-between p-4 bg-white shadow rounded-lg"
     >
       <div className="flex items-center gap-3">

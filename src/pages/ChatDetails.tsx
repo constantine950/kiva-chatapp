@@ -2,8 +2,8 @@ import { useState } from "react";
 import { useParams, useNavigate } from "react-router";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import ChatWindow from "../components/ChatWindow";
-import { useMutation } from "@tanstack/react-query";
-import { sendMessage } from "../lib/dbqueries";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { getFriendDetailAndMessages, sendMessage } from "../lib/dbqueries";
 import { useUser } from "@clerk/clerk-react";
 
 type Message = {
@@ -30,6 +30,12 @@ export default function ChatDetail() {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState(initalMsg);
 
+  const { data: friendAndMessages } = useQuery({
+    queryKey: ["friendAndMessages", id],
+    queryFn: () => getFriendDetailAndMessages(user?.id, id || ""),
+    enabled: !!user && !!id,
+  });
+
   const { mutate: sendMessages } = useMutation({
     mutationKey: ["sendMessages"],
     mutationFn: ({
@@ -38,7 +44,7 @@ export default function ChatDetail() {
       text,
     }: {
       sender_id: string | undefined;
-      receiver_id: number | undefined;
+      receiver_id: string | undefined;
       text: string;
     }) => sendMessage(sender_id, receiver_id, text),
   });
@@ -49,7 +55,7 @@ export default function ChatDetail() {
       ...messages,
       { id: Date.now(), sender: "me", text: input, time: "Now" },
     ]);
-    sendMessages({ sender_id: user?.id, receiver_id: Number(id), text: input });
+    sendMessages({ sender_id: user?.id, receiver_id: id, text: input });
     setInput("");
   };
 
@@ -63,9 +69,12 @@ export default function ChatDetail() {
         >
           <ArrowLeftIcon className="w-5 h-5" />
         </button>
-        <img src={user?.imageUrl} className="w-10 h-10 rounded-full" />
+        <img
+          src={friendAndMessages?.friend?.image}
+          className="w-10 h-10 rounded-full"
+        />
         <div>
-          <p className="font-medium">{user?.fullName}</p>
+          <p className="font-medium">{friendAndMessages?.friend?.full_name}</p>
           <p className="text-sm text-green-500">Active now</p>
         </div>
       </div>

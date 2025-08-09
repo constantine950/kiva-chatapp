@@ -6,7 +6,7 @@ import Spinner from "../components/Spinner";
 import FriendList from "../components/FriendList";
 
 type Friend = {
-  friend_id: number;
+  friendClerk_id: string;
   Users: {
     full_name: string;
     image: string;
@@ -42,8 +42,8 @@ export default function Friends() {
         <ul className="space-y-4">
           {friends?.map((friend) => (
             <FriendList
-              key={friend.friend_id}
-              friend_id={friend.friend_id}
+              key={friend.friendClerk_id}
+              friendClerk_id={friend.friendClerk_id}
               Users={friend.Users}
             />
           ))}
