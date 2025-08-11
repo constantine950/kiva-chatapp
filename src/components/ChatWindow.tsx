@@ -2,17 +2,15 @@ import { PaperAirplaneIcon, PaperClipIcon } from "@heroicons/react/24/outline";
 
 type Message = {
   id: number;
+  created_at?: string;
+  sender_id?: string;
+  receiver_id?: string;
   sender: "me" | "other";
-  text?: string;
-  time: string;
-  file?: {
-    name: string;
-    type: string;
-  };
+  text: string;
 };
 
 type Props = {
-  messages: Message[];
+  messages: Message[] | undefined;
   input: string;
   setInput: (text: string) => void;
   onSend: () => void;
@@ -27,7 +25,7 @@ export default function ChatWindow({
   return (
     <>
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.map((msg) => (
+        {messages?.map((msg) => (
           <div
             key={msg.id}
             className={`max-w-xs md:max-w-md lg:max-w-lg px-4 py-3 rounded-xl shadow ${
@@ -37,18 +35,9 @@ export default function ChatWindow({
             }`}
           >
             {msg.text && <p>{msg.text}</p>}
-            {msg.file && (
-              <div className="mt-2 bg-gray-100 rounded-md p-2 flex items-center gap-2 text-sm">
-                <div className="bg-red-500 text-white px-2 py-1 rounded uppercase text-xs">
-                  {msg.file.type}
-                </div>
-                <span className="text-gray-700 truncate">{msg.file.name}</span>
-                <button className="ml-auto text-blue-500 text-sm hover:underline">
-                  Download
-                </button>
-              </div>
-            )}
-            <p className="text-xs text-right mt-1 opacity-70">{msg.time}</p>
+            <p className="text-xs text-right mt-1 opacity-70">
+              {msg.created_at}
+            </p>
           </div>
         ))}
       </div>

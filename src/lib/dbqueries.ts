@@ -145,10 +145,28 @@ export const sendMessage = async (
   return message;
 };
 
+type Message = {
+  id: number;
+  created_at?: string;
+  sender_id?: string;
+  receiver_id?: string;
+  sender: "me" | "other";
+  text: string;
+};
+
+type FriendRow = {
+  id: number;
+  clerkId: string;
+  full_name: string;
+  username: string;
+  email: string;
+  image: string;
+};
+
 export const getFriendDetailAndMessages = async (
   clerkId: string | undefined,
   friendId: string
-) => {
+): Promise<{ friend: FriendRow | null; messages: Message[] }> => {
   // 1️⃣ Get friend details
   const { data: friendRow, error: friendError } = await supabase
     .from("Users")
@@ -162,7 +180,7 @@ export const getFriendDetailAndMessages = async (
   }
 
   // 2️⃣ Get messages between users
-  const { data: messages, error: messagesError } = await supabase
+  const { data: rawMessages, error: messagesError } = await supabase
     .from("Messages")
     .select("*")
     .or(
@@ -175,6 +193,42 @@ export const getFriendDetailAndMessages = async (
     console.error(messagesError.message);
     return { friend: friendRow, messages: [] };
   }
+
+  const formatMessageTime = (dateString?: string) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+
+    const now = new Date();
+    const isToday = date.toDateString() === now.toDateString();
+
+    const yesterday = new Date();
+    yesterday.setDate(now.getDate() - 1);
+    const isYesterday = date.toDateString() === yesterday.toDateString();
+
+    if (isToday) {
+      return date.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    } else if (isYesterday) {
+      return "Yesterday";
+    } else {
+      return date.toLocaleDateString([], { month: "short", day: "numeric" }); // e.g., "Aug 7"
+    }
+  };
+
+  // 3️⃣ Transform into Message[]
+  const messages: Message[] =
+    rawMessages?.map((m) => {
+      return {
+        id: m.id,
+        created_at: formatMessageTime(m.created_at),
+        sender_id: m.sender_id,
+        receiver_id: m.receiver_id,
+        sender: m.sender_id === clerkId ? "me" : "other",
+        text: m.text,
+      };
+    }) ?? [];
 
   return { friend: friendRow, messages };
 };

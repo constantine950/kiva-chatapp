@@ -6,35 +6,20 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { getFriendDetailAndMessages, sendMessage } from "../lib/dbqueries";
 import { useUser } from "@clerk/clerk-react";
 
-type Message = {
-  id: number;
-  sender: "me" | "other";
-  text?: string;
-  time: string;
-  file?: {
-    name: string;
-    type: string;
-  };
-};
-
-const initalMsg: Message[] = [
-  { id: 1, sender: "me", text: "Hey!", time: "3:00 PM" },
-  { id: 2, sender: "other", text: "What's up?", time: "3:02 PM" },
-];
-
 export default function ChatDetail() {
   const { user } = useUser();
   const { id } = useParams();
   const navigate = useNavigate();
 
   const [input, setInput] = useState("");
-  const [messages, setMessages] = useState(initalMsg);
 
   const { data: friendAndMessages } = useQuery({
     queryKey: ["friendAndMessages", id],
     queryFn: () => getFriendDetailAndMessages(user?.id, id || ""),
     enabled: !!user && !!id,
   });
+
+  console.log(friendAndMessages);
 
   const { mutate: sendMessages } = useMutation({
     mutationKey: ["sendMessages"],
@@ -51,10 +36,6 @@ export default function ChatDetail() {
 
   const handleSend = () => {
     if (!input.trim()) return;
-    setMessages([
-      ...messages,
-      { id: Date.now(), sender: "me", text: input, time: "Now" },
-    ]);
     sendMessages({ sender_id: user?.id, receiver_id: id, text: input });
     setInput("");
   };
@@ -81,7 +62,7 @@ export default function ChatDetail() {
 
       {/* Chat window */}
       <ChatWindow
-        messages={messages}
+        messages={friendAndMessages?.messages}
         input={input}
         setInput={setInput}
         onSend={handleSend}
