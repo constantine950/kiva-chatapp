@@ -7,19 +7,16 @@ import { getFriendDetailAndMessages, sendMessage } from "../lib/dbqueries";
 import { useUser } from "@clerk/clerk-react";
 
 export default function ChatDetail() {
+  const [input, setInput] = useState("");
   const { user } = useUser();
   const { id } = useParams();
   const navigate = useNavigate();
-
-  const [input, setInput] = useState("");
 
   const { data: friendAndMessages } = useQuery({
     queryKey: ["friendAndMessages", id],
     queryFn: () => getFriendDetailAndMessages(user?.id, id || ""),
     enabled: !!user && !!id,
   });
-
-  console.log(friendAndMessages);
 
   const { mutate: sendMessages } = useMutation({
     mutationKey: ["sendMessages"],

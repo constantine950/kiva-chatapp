@@ -147,9 +147,9 @@ export const sendMessage = async (
 
 type Message = {
   id: number;
-  created_at?: string;
-  sender_id?: string;
-  receiver_id?: string;
+  created_at: string;
+  sender_id: string;
+  receiver_id: string;
   sender: "me" | "other";
   text: string;
 };
@@ -232,3 +232,19 @@ export const getFriendDetailAndMessages = async (
 
   return { friend: friendRow, messages };
 };
+
+export async function getChatListWithLastMessage(currentClerkId: string) {
+  const { data, error } = await supabase.rpc(
+    "get_chat_list_with_last_message",
+    {
+      current_clerk_id: currentClerkId,
+    }
+  );
+
+  if (error) {
+    console.error("Error fetching chat list:", error.message);
+    return [];
+  }
+
+  return data || [];
+}

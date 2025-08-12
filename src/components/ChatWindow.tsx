@@ -2,9 +2,9 @@ import { PaperAirplaneIcon, PaperClipIcon } from "@heroicons/react/24/outline";
 
 type Message = {
   id: number;
-  created_at?: string;
-  sender_id?: string;
-  receiver_id?: string;
+  created_at: string;
+  sender_id: string;
+  receiver_id: string;
   sender: "me" | "other";
   text: string;
 };
