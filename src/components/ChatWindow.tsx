@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import { PaperAirplaneIcon, PaperClipIcon } from "@heroicons/react/24/outline";
 
 type Message = {
@@ -22,9 +23,41 @@ export default function ChatWindow({
   setInput,
   onSend,
 }: Props) {
+  const bottomRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
+  const [isNearBottom, setIsNearBottom] = useState(true);
+
+  // Track if user is near the bottom
+  const handleScroll = () => {
+    if (!containerRef.current) return;
+    const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
+    const distanceFromBottom = scrollHeight - (scrollTop + clientHeight);
+    setIsNearBottom(distanceFromBottom < 100); // 100px threshold
+  };
+
+  // Scroll on new messages
+  useEffect(() => {
+    if (!messages) return;
+
+    if (isFirstLoad || isNearBottom) {
+      bottomRef.current?.scrollIntoView({
+        behavior: isFirstLoad ? "auto" : "smooth",
+      });
+    }
+
+    if (isFirstLoad) {
+      setIsFirstLoad(false);
+    }
+  }, [messages, isFirstLoad, isNearBottom]);
+
   return (
     <>
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div
+        ref={containerRef}
+        onScroll={handleScroll}
+        className="flex-1 overflow-y-auto p-4 space-y-4"
+      >
         {messages?.map((msg) => (
           <div
             key={msg.id}
@@ -40,6 +73,9 @@ export default function ChatWindow({
             </p>
           </div>
         ))}
+
+        {/* Empty div for scroll target */}
+        <div ref={bottomRef} />
       </div>
 
       {/* Input */}

@@ -163,6 +163,29 @@ type FriendRow = {
   image: string;
 };
 
+const formatMessageTime = (dateString?: string) => {
+  if (!dateString) return "";
+  const date = new Date(dateString);
+
+  const now = new Date();
+  const isToday = date.toDateString() === now.toDateString();
+
+  const yesterday = new Date();
+  yesterday.setDate(now.getDate() - 1);
+  const isYesterday = date.toDateString() === yesterday.toDateString();
+
+  if (isToday) {
+    return date.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  } else if (isYesterday) {
+    return "Yesterday";
+  } else {
+    return date.toLocaleDateString([], { month: "short", day: "numeric" }); // e.g., "Aug 7"
+  }
+};
+
 export const getFriendDetailAndMessages = async (
   clerkId: string | undefined,
   friendId: string
@@ -193,29 +216,6 @@ export const getFriendDetailAndMessages = async (
     console.error(messagesError.message);
     return { friend: friendRow, messages: [] };
   }
-
-  const formatMessageTime = (dateString?: string) => {
-    if (!dateString) return "";
-    const date = new Date(dateString);
-
-    const now = new Date();
-    const isToday = date.toDateString() === now.toDateString();
-
-    const yesterday = new Date();
-    yesterday.setDate(now.getDate() - 1);
-    const isYesterday = date.toDateString() === yesterday.toDateString();
-
-    if (isToday) {
-      return date.toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      });
-    } else if (isYesterday) {
-      return "Yesterday";
-    } else {
-      return date.toLocaleDateString([], { month: "short", day: "numeric" }); // e.g., "Aug 7"
-    }
-  };
 
   // 3️⃣ Transform into Message[]
   const messages: Message[] =
