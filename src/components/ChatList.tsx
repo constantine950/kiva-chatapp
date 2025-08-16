@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import { NavLink } from "react-router"; // instead of Link
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useUser } from "@clerk/clerk-react";
 import { useLiveChatList } from "../lib/hooks/useLiveChatList";
@@ -10,6 +10,7 @@ export default function ChatList() {
   return (
     <div className="h-full border-r w-full md:max-w-sm px-4 py-6 overflow-y-auto">
       <h2 className="text-lg font-semibold mb-4">Chats</h2>
+
       {/* Search */}
       <div className="relative mb-4">
         <input
@@ -23,36 +24,45 @@ export default function ChatList() {
       {/* List or Empty State */}
       {chatList.length > 0 ? (
         <ul className="space-y-4">
-          {chatList.map((chat) => (
-            <li key={chat.id}>
-              <Link
-                to={`/dashboard/chat/${
-                  chat.lastSenderId === user?.id
-                    ? chat.friend_id
-                    : chat.lastSenderId
-                }`}
-                className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 cursor-pointer"
-              >
-                <img
-                  src={
-                    user?.id !== chat.friend_id ? chat.friendImg : chat.userImg
+          {chatList.map((chat) => {
+            const chatId =
+              chat.lastSenderId === user?.id
+                ? chat.friend_id
+                : chat.lastSenderId;
+
+            return (
+              <li key={chat.id}>
+                <NavLink
+                  to={`/dashboard/chat/${chatId}`}
+                  className={({ isActive }) =>
+                    `flex items-center gap-3 p-2 rounded-lg cursor-pointer ${
+                      isActive ? "bg-gray-100" : "hover:bg-gray-100"
+                    }`
                   }
-                  alt={chat.friendName}
-                  className="w-10 h-10 rounded-full object-cover bg-gray-200"
-                />
-                <div className="min-w-0">
-                  <p className="font-medium truncate">
-                    {user?.id !== chat.friend_id
-                      ? chat.friendName
-                      : chat.userName}
-                  </p>
-                  <p className="text-sm text-gray-500 truncate w-40">
-                    {chat.lastMessage || "No messages yet"}
-                  </p>
-                </div>
-              </Link>
-            </li>
-          ))}
+                >
+                  <img
+                    src={
+                      user?.id !== chat.friend_id
+                        ? chat.friendImg
+                        : chat.userImg
+                    }
+                    alt={chat.friendName}
+                    className="w-10 h-10 rounded-full object-cover bg-gray-200"
+                  />
+                  <div className="min-w-0">
+                    <p className="font-medium truncate">
+                      {user?.id !== chat.friend_id
+                        ? chat.friendName
+                        : chat.userName}
+                    </p>
+                    <p className="text-sm text-gray-500 truncate w-40">
+                      {chat.lastMessage || "No messages yet"}
+                    </p>
+                  </div>
+                </NavLink>
+              </li>
+            );
+          })}
         </ul>
       ) : (
         <div className="flex flex-col items-center justify-center h-40 text-gray-500">
