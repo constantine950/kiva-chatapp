@@ -26,7 +26,11 @@ export default function ChatList() {
           {chatList.map((chat) => (
             <li key={chat.id}>
               <Link
-                to={`/dashboard/chat/${chat.friend_id}`}
+                to={`/dashboard/chat/${
+                  chat.lastSenderId === user?.id
+                    ? chat.friend_id
+                    : chat.lastSenderId
+                }`}
                 className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 cursor-pointer"
               >
                 <img
