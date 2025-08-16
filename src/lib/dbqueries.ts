@@ -123,37 +123,6 @@ export async function getUserFriends(
   return normalized;
 }
 
-export const sendMessage = async (
-  sender_id: string | undefined,
-  receiver_id: string | undefined,
-  text: string
-) => {
-  const { data: message, error: MessageError } = await supabase
-    .from("Messages")
-    .insert([
-      {
-        sender_id,
-        receiver_id,
-        text,
-      },
-    ]);
-
-  if (MessageError) {
-    console.error(MessageError.message);
-  }
-
-  return message;
-};
-
-type Message = {
-  id: number;
-  created_at: string;
-  sender_id: string;
-  receiver_id: string;
-  sender: "me" | "other";
-  text: string;
-};
-
 type FriendRow = {
   id: number;
   clerkId: string;
@@ -163,88 +132,21 @@ type FriendRow = {
   image: string;
 };
 
-const formatMessageTime = (dateString?: string) => {
-  if (!dateString) return "";
-  const date = new Date(dateString);
-
-  const now = new Date();
-  const isToday = date.toDateString() === now.toDateString();
-
-  const yesterday = new Date();
-  yesterday.setDate(now.getDate() - 1);
-  const isYesterday = date.toDateString() === yesterday.toDateString();
-
-  if (isToday) {
-    return date.toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  } else if (isYesterday) {
-    return "Yesterday";
-  } else {
-    return date.toLocaleDateString([], { month: "short", day: "numeric" }); // e.g., "Aug 7"
-  }
-};
-
-export const getFriendDetailAndMessages = async (
-  clerkId: string | undefined,
+export const getFriendDetail = async (
   friendId: string
-): Promise<{ friend: FriendRow | null; messages: Message[] }> => {
-  // 1️⃣ Get friend details
-  const { data: friendRow, error: friendError } = await supabase
+): Promise<FriendRow | null> => {
+  if (!friendId) return null;
+
+  const { data: friendRow, error } = await supabase
     .from("Users")
     .select("id, clerkId, full_name, username, email, image")
     .eq("clerkId", friendId)
     .single();
 
-  if (friendError) {
-    console.error(friendError.message);
-    return { friend: null, messages: [] };
-  }
-
-  // 2️⃣ Get messages between users
-  const { data: rawMessages, error: messagesError } = await supabase
-    .from("Messages")
-    .select("*")
-    .or(
-      `and(sender_id.eq.${clerkId},receiver_id.eq.${friendId}),` +
-        `and(sender_id.eq.${friendId},receiver_id.eq.${clerkId})`
-    )
-    .order("created_at", { ascending: true });
-
-  if (messagesError) {
-    console.error(messagesError.message);
-    return { friend: friendRow, messages: [] };
-  }
-
-  // 3️⃣ Transform into Message[]
-  const messages: Message[] =
-    rawMessages?.map((m) => {
-      return {
-        id: m.id,
-        created_at: formatMessageTime(m.created_at),
-        sender_id: m.sender_id,
-        receiver_id: m.receiver_id,
-        sender: m.sender_id === clerkId ? "me" : "other",
-        text: m.text,
-      };
-    }) ?? [];
-
-  return { friend: friendRow, messages };
-};
-
-export async function getChatListWithLastMessage(currentClerkId: string) {
-  const { data, error } = await supabase.rpc(
-    "get_chat_list_with_last_message",
-    {
-      current_clerk_id: currentClerkId,
-    }
-  );
-
   if (error) {
-    console.error("Error fetching chat list:", error.message);
-    return [];
+    console.error(error.message);
+    return null;
   }
 
-  return data || [];
-}
+  return friendRow;
+};

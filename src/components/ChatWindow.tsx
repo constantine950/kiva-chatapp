@@ -1,102 +1,77 @@
-import { useEffect, useRef, useState } from "react";
-import { PaperAirplaneIcon, PaperClipIcon } from "@heroicons/react/24/outline";
+import { PaperAirplaneIcon } from "@heroicons/react/24/solid";
+import { type FormEvent } from "react";
+import type { Message } from "../lib/types";
+import { useUser } from "@clerk/clerk-react";
 
-type Message = {
-  id: number;
-  created_at: string;
-  sender_id: string;
-  receiver_id: string;
-  sender: "me" | "other";
-  text: string;
-};
-
-type Props = {
-  messages: Message[] | undefined;
+interface ChatWindowProps {
+  messages: Message[];
   input: string;
-  setInput: (text: string) => void;
+  setInput: (val: string) => void;
   onSend: () => void;
-};
+}
 
 export default function ChatWindow({
   messages,
   input,
   setInput,
   onSend,
-}: Props) {
-  const bottomRef = useRef<HTMLDivElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [isFirstLoad, setIsFirstLoad] = useState(true);
-  const [isNearBottom, setIsNearBottom] = useState(true);
+}: ChatWindowProps) {
+  const { user } = useUser();
 
-  // Track if user is near the bottom
-  const handleScroll = () => {
-    if (!containerRef.current) return;
-    const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
-    const distanceFromBottom = scrollHeight - (scrollTop + clientHeight);
-    setIsNearBottom(distanceFromBottom < 100); // 100px threshold
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    onSend();
   };
 
-  // Scroll on new messages
-  useEffect(() => {
-    if (!messages) return;
-
-    if (isFirstLoad || isNearBottom) {
-      bottomRef.current?.scrollIntoView({
-        behavior: isFirstLoad ? "auto" : "smooth",
-      });
-    }
-
-    if (isFirstLoad) {
-      setIsFirstLoad(false);
-    }
-  }, [messages, isFirstLoad, isNearBottom]);
-
   return (
-    <>
-      <div
-        ref={containerRef}
-        onScroll={handleScroll}
-        className="flex-1 overflow-y-auto p-4 space-y-4"
-      >
-        {messages?.map((msg) => (
+    <div className="flex flex-col h-full bg-gray-50">
+      {/* Messages list */}
+      <div className="flex-1 overflow-y-auto p-4 space-y-2">
+        {messages.map((msg) => (
           <div
             key={msg.id}
-            className={`max-w-xs md:max-w-md lg:max-w-lg px-4 py-3 rounded-xl shadow ${
-              msg.sender === "me"
-                ? "ml-auto bg-blue-500 text-white"
-                : "mr-auto bg-white text-gray-800 border"
+            className={`flex ${
+              msg.senderId === user?.id ? "justify-end" : "justify-start"
             }`}
           >
-            {msg.text && <p>{msg.text}</p>}
-            <p className="text-xs text-right mt-1 opacity-70">
-              {msg.created_at}
-            </p>
+            <div
+              className={`px-4 py-2 rounded-2xl max-w-xs break-words shadow-sm ${
+                msg.senderId === user?.id
+                  ? "bg-blue-500 text-white rounded-br-none"
+                  : "bg-gray-200 text-gray-900 rounded-bl-none"
+              }`}
+            >
+              <p>{msg.text}</p>
+              <p className="text-[10px] opacity-70 mt-1 text-right">
+                {msg.createdAt.toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </p>
+            </div>
           </div>
         ))}
-
-        {/* Empty div for scroll target */}
-        <div ref={bottomRef} />
       </div>
 
-      {/* Input */}
-      <div className="border-t bg-white px-4 py-3 flex items-center gap-3">
-        <PaperClipIcon className="w-5 h-5 text-gray-500 cursor-pointer" />
+      {/* Input box */}
+      <form
+        onSubmit={handleSubmit}
+        className="p-3 bg-white border-t flex items-center space-x-2"
+      >
         <input
           type="text"
-          className="flex-1 border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="flex-1 px-4 py-2 border rounded-full outline-none focus:ring focus:ring-blue-200"
           placeholder="Type a message..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && onSend()}
         />
         <button
-          onClick={onSend}
-          className="bg-[#3190F8] hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition flex items-center gap-1"
+          type="submit"
+          className="p-2 bg-blue-500 hover:bg-blue-600 rounded-full text-white transition-colors"
         >
-          Send
-          <PaperAirplaneIcon className="w-4 h-4 rotate-45" />
+          <PaperAirplaneIcon className="h-5 w-5 rotate-90" />
         </button>
-      </div>
-    </>
+      </form>
+    </div>
   );
 }
