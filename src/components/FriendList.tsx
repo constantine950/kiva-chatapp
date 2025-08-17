@@ -1,12 +1,5 @@
 import { Link } from "react-router";
-
-type Friend = {
-  friendClerk_id: string;
-  Users: {
-    full_name: string;
-    image: string;
-  } | null;
-};
+import type { Friend } from "../lib/types";
 
 export default function FriendList(friend: Friend) {
   return (

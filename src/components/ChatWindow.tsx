@@ -1,14 +1,7 @@
 import { PaperAirplaneIcon } from "@heroicons/react/24/solid";
 import { type FormEvent } from "react";
-import type { Message } from "../lib/types";
+import type { ChatWindowProps } from "../lib/types";
 import { useUser } from "@clerk/clerk-react";
-
-interface ChatWindowProps {
-  messages: Message[];
-  input: string;
-  setInput: (val: string) => void;
-  onSend: () => void;
-}
 
 export default function ChatWindow({
   messages,

@@ -1,12 +1,5 @@
 import supabase from "./supabase";
-
-type User = {
-  id: string;
-  fullName: string | null;
-  emailAddresses: { emailAddress: string }[];
-  username: string | null;
-  image?: string;
-};
+import type { Friend, FriendRow, User } from "./types";
 
 export const syncUserToSupabase = async (user: User | null | undefined) => {
   if (!user) return;
@@ -91,14 +84,6 @@ export const checkIsFriend = async ({
   return addedFriend;
 };
 
-export type Friend = {
-  friendClerk_id: string;
-  Users: {
-    full_name: string;
-    image: string;
-  };
-};
-
 export async function getUserFriends(
   userId: string | undefined
 ): Promise<Friend[]> {
@@ -122,15 +107,6 @@ export async function getUserFriends(
 
   return normalized;
 }
-
-type FriendRow = {
-  id: number;
-  clerkId: string;
-  full_name: string;
-  username: string;
-  email: string;
-  image: string;
-};
 
 export const getFriendDetail = async (
   friendId: string

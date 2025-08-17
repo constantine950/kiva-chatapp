@@ -1,8 +1,4 @@
-type MenuItems = {
-  id: number;
-  link: string;
-  text: string;
-};
+import type { MenuItems } from "../lib/types";
 
 export const items: MenuItems[] = [
   {

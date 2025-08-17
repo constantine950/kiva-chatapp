@@ -1,19 +1,7 @@
 import { Link, useLocation } from "react-router";
+import type { MenuItemProps } from "../lib/types";
 
-type MenuItems = {
-  id: number;
-  link: string;
-  text: string;
-};
-
-type Props = {
-  key: number;
-  className: string;
-  item: MenuItems;
-  onClick?: () => void;
-};
-
-export default function MenuItem({ item, className, onClick }: Props) {
+export default function MenuItem({ item, className, onClick }: MenuItemProps) {
   const pathName = useLocation();
 
   return (

@@ -1,4 +1,4 @@
-import { NavLink } from "react-router"; // instead of Link
+import { NavLink } from "react-router";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useUser } from "@clerk/clerk-react";
 import { useLiveChatList } from "../lib/hooks/useLiveChatList";
