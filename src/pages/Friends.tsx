@@ -4,14 +4,7 @@ import { getUserFriends } from "../lib/dbqueries";
 import { useUser } from "@clerk/clerk-react";
 import Spinner from "../components/Spinner";
 import FriendList from "../components/FriendList";
-
-type Friend = {
-  friendClerk_id: string;
-  Users: {
-    full_name: string;
-    image: string;
-  } | null;
-};
+import type { Friend } from "../lib/types";
 
 export default function Friends() {
   const { user } = useUser();

@@ -6,34 +6,34 @@ import {
   UserPlusIcon,
 } from "@heroicons/react/24/outline";
 
-export default function Dashboard() {
-  const sections = [
-    {
-      title: "Chat",
-      description: "Access your conversations and start a new chat.",
-      link: "/dashboard/chat",
-      icon: <ChatBubbleLeftEllipsisIcon className="w-6 h-6 text-blue-600" />,
-    },
-    {
-      title: "Friends",
-      description: "Manage your friends list and see who's online.",
-      link: "/dashboard/friends",
-      icon: <UserGroupIcon className="w-6 h-6 text-green-600" />,
-    },
-    {
-      title: "Add Friends",
-      description: "Browse users and send friend requests.",
-      link: "/dashboard/addfriends",
-      icon: <UserPlusIcon className="w-6 h-6 text-purple-600" />,
-    },
-    {
-      title: "Settings",
-      description: "Update your profile and customize preferences.",
-      link: "/dashboard/settings",
-      icon: <Cog6ToothIcon className="w-6 h-6 text-gray-600" />,
-    },
-  ];
+const sections = [
+  {
+    title: "Chat",
+    description: "Access your conversations and start a new chat.",
+    link: "/dashboard/chat",
+    icon: <ChatBubbleLeftEllipsisIcon className="w-6 h-6 text-blue-600" />,
+  },
+  {
+    title: "Friends",
+    description: "Manage your friends list and see who's online.",
+    link: "/dashboard/friends",
+    icon: <UserGroupIcon className="w-6 h-6 text-green-600" />,
+  },
+  {
+    title: "Add Friends",
+    description: "Browse users and send friend requests.",
+    link: "/dashboard/addfriends",
+    icon: <UserPlusIcon className="w-6 h-6 text-purple-600" />,
+  },
+  {
+    title: "Settings",
+    description: "Update your profile and customize preferences.",
+    link: "/dashboard/settings",
+    icon: <Cog6ToothIcon className="w-6 h-6 text-gray-600" />,
+  },
+];
 
+export default function Dashboard() {
   return (
     <div className="pt-20 px-4 sm:px-6 lg:px-8">
       <h1 className="text-2xl font-bold mb-6 text-gray-800">

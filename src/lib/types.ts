@@ -38,7 +38,7 @@ export interface Conversation {
   id: string;
   participants: string[];
   lastMessage: string;
-  lastMessageAt: Date; // always normalized to Date in subscription
+  lastMessageAt: Date;
   lastSenderId: string;
   friend_id: string;
   userImg: string;

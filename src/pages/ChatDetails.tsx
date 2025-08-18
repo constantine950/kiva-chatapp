@@ -14,7 +14,6 @@ export default function ChatDetail() {
   const { id: friendId } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  // Friend detail (Supabase)
   const { data: friendDetail } = useQuery({
     queryKey: ["friendDetail", friendId],
     queryFn: () => getFriendDetail(friendId!),
@@ -23,7 +22,6 @@ export default function ChatDetail() {
 
   const messages = useLiveMessages(user?.id, friendId);
 
-  // Send message
   const { mutate: sendMessages } = useMutation({
     mutationKey: ["sendMessages"],
     mutationFn: ({
@@ -72,7 +70,6 @@ export default function ChatDetail() {
 
   return (
     <div className="h-full flex flex-col bg-gray-50">
-      {/* Header */}
       <div className="flex items-center gap-3 px-4 py-3 border-b bg-white">
         <button
           onClick={() => navigate("/dashboard/chat")}
@@ -91,7 +88,6 @@ export default function ChatDetail() {
         </div>
       </div>
 
-      {/* Chat window */}
       <ChatWindow
         messages={messages}
         input={input}

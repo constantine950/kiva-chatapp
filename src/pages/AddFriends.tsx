@@ -19,7 +19,7 @@ export default function AddFriends() {
       const { data: friendsData, error } = await supabase
         .from("Friends")
         .select("friendClerk_id")
-        .eq("user_id", user?.id); // Clerk ID
+        .eq("user_id", user?.id);
 
       if (error) {
         console.error("Error fetching friends:", error);
