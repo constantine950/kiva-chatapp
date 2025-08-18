@@ -4,6 +4,7 @@ import { addFriends, getRandomUsers } from "../lib/dbqueries";
 import { useState } from "react";
 import Spinner from "../components/Spinner";
 import supabase from "../lib/supabase";
+import NoUser from "../components/NoUser";
 
 export default function AddFriends() {
   const [friends, setFriends] = useState<string[]>([]);
@@ -57,6 +58,8 @@ export default function AddFriends() {
       addFriend({ currentUserId: user.id, friendClerk_id: id });
     }
   };
+
+  if (!user) return <NoUser />;
 
   return (
     <div className="pt-20 px-4 sm:px-6 lg:px-8 max-w-2xl mx-auto">

@@ -1,10 +1,15 @@
 import { Outlet, useLocation } from "react-router";
 import ChatList from "../components/ChatList";
 import NoChatSelected from "../components/NoChatSelected";
+import { useUser } from "@clerk/clerk-react";
+import NoUser from "../components/NoUser";
 
 export default function Chat() {
+  const { user } = useUser();
   const location = useLocation();
   const isChatDetailRoute = location.pathname.match(/^\/dashboard\/chat\/.+/);
+
+  if (!user) return <NoUser />;
 
   return (
     <div className="pt-20 h-[calc(100vh-5rem)] flex flex-col md:flex-row">

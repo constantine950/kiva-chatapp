@@ -5,6 +5,7 @@ import { useUser } from "@clerk/clerk-react";
 import Spinner from "../components/Spinner";
 import FriendList from "../components/FriendList";
 import type { Friend } from "../lib/types";
+import NoUser from "../components/NoUser";
 
 export default function Friends() {
   const { user } = useUser();
@@ -14,6 +15,8 @@ export default function Friends() {
     queryFn: () => getUserFriends(user?.id),
     enabled: !!user,
   });
+
+  if (!user) return <NoUser />;
 
   return (
     <div className="pt-20 px-4 sm:px-6 lg:px-8 max-w-2xl mx-auto">
