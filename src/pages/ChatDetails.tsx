@@ -69,8 +69,9 @@ export default function ChatDetail() {
   };
 
   return (
-    <div className="h-full flex flex-col bg-gray-50">
-      <div className="flex items-center gap-3 px-4 py-3 border-b bg-white">
+    <div className="h-full flex flex-col bg-gray-50 overflow-hidden">
+      {/* Header */}
+      <div className="flex items-center gap-3 px-4 py-3 border-b bg-white shrink-0">
         <button
           onClick={() => navigate("/dashboard/chat")}
           className="block md:hidden p-1 text-gray-500 hover:text-gray-700"
@@ -88,12 +89,15 @@ export default function ChatDetail() {
         </div>
       </div>
 
-      <ChatWindow
-        messages={messages}
-        input={input}
-        setInput={setInput}
-        onSend={handleSend}
-      />
+      {/* Chat window */}
+      <div className="flex-1 overflow-hidden">
+        <ChatWindow
+          messages={messages}
+          input={input}
+          setInput={setInput}
+          onSend={handleSend}
+        />
+      </div>
     </div>
   );
 }

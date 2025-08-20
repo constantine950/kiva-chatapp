@@ -19,7 +19,7 @@ export const syncUserToSupabase = async (user: User | null | undefined) => {
   if (!existingUser) {
     const { error: insertError } = await supabase.from("Users").insert([
       {
-        full_name: user.fullName,
+        full_name: user.fullName || user.username,
         email: user.emailAddresses[0].emailAddress,
         username: user.username,
         clerkId: user.id,

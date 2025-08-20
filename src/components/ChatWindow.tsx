@@ -1,5 +1,5 @@
 import { PaperAirplaneIcon } from "@heroicons/react/24/solid";
-import { type FormEvent } from "react";
+import { type FormEvent, useEffect, useRef } from "react";
 import type { ChatWindowProps } from "../lib/types";
 import { useUser } from "@clerk/clerk-react";
 
@@ -10,11 +10,17 @@ export default function ChatWindow({
   onSend,
 }: ChatWindowProps) {
   const { user } = useUser();
+  const endOfMessagesRef = useRef<HTMLDivElement | null>(null);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     onSend();
   };
+
+  // 🔑 Auto scroll when messages change
+  useEffect(() => {
+    endOfMessagesRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   return (
     <div className="flex flex-col h-full bg-gray-50">
@@ -44,12 +50,15 @@ export default function ChatWindow({
             </div>
           </div>
         ))}
+
+        {/* 👇 invisible div used as scroll target */}
+        <div ref={endOfMessagesRef} />
       </div>
 
-      {/* Input box */}
+      {/* Sticky input box */}
       <form
         onSubmit={handleSubmit}
-        className="p-3 bg-white border-t flex items-center space-x-2"
+        className="p-3 bg-white border-t flex items-center space-x-2 sticky bottom-0"
       >
         <input
           type="text"
