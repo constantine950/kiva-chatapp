@@ -71,7 +71,7 @@ export default function ChatWindow({
           type="submit"
           className="p-2 bg-blue-500 hover:bg-blue-600 rounded-full text-white transition-colors"
         >
-          <PaperAirplaneIcon className="h-5 w-5 rotate-90" />
+          <PaperAirplaneIcon className="h-5 w-5 -rotate-45" />
         </button>
       </form>
     </div>
