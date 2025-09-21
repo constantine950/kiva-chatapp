@@ -1,8 +1,5 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-
-type NavState = {
-  isMenuOpen: boolean;
-};
+import type { NavState } from "../lib/types";
 
 const initialState: NavState = {
   isMenuOpen: false,

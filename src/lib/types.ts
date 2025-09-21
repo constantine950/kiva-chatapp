@@ -72,3 +72,7 @@ export interface MobileNavProp {
   handleToggle?: () => void;
   isMenuOpen?: boolean;
 }
+
+export type NavState = {
+  isMenuOpen: boolean;
+};
