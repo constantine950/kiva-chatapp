@@ -1,20 +1,13 @@
-import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router";
-import { getUserFriends } from "../lib/dbqueries";
 import { useUser } from "@clerk/clerk-react";
 import Spinner from "../components/Spinner";
 import FriendList from "../components/FriendList";
-import type { Friend } from "../lib/types";
 import NoUser from "../components/NoUser";
+import { useFriends } from "../lib/hooks/useFriends";
 
 export default function Friends() {
   const { user } = useUser();
-
-  const { data: friends, isLoading } = useQuery<Friend[]>({
-    queryKey: ["friends"],
-    queryFn: () => getUserFriends(user?.id),
-    enabled: !!user,
-  });
+  const { friends, isLoading } = useFriends(user);
 
   if (!user) return <NoUser />;
 

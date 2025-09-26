@@ -1,54 +1,16 @@
 import { useUser } from "@clerk/clerk-react";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { addFriends, getRandomUsers } from "../lib/dbqueries";
 import { useState } from "react";
 import Spinner from "../components/Spinner";
-import supabase from "../lib/supabase";
 import NoUser from "../components/NoUser";
+import { useAddfriends } from "../lib/hooks/useAddfriends";
+import { useAddfriend } from "../lib/hooks/useAddfriend";
 
 export default function AddFriends() {
   const [friends, setFriends] = useState<string[]>([]);
   const { user } = useUser();
 
-  const { data: users, isLoading } = useQuery({
-    queryKey: ["addFriends", user?.id],
-    queryFn: async () => {
-      // Step 1: Get random users excluding current user
-      const randomUsers = await getRandomUsers(user);
-
-      // Step 2: Get IDs of users already added as friends
-      const { data: friendsData, error } = await supabase
-        .from("Friends")
-        .select("friendClerk_id")
-        .eq("user_id", user?.id);
-
-      if (error) {
-        console.error("Error fetching friends:", error);
-        return randomUsers?.map((u) => ({ ...u, isFriend: false }));
-      }
-
-      const friendIds = friendsData?.map((f) => f.friendClerk_id) || [];
-      // Step 3: Tag each user with isFriend
-      const usersWithStatus = randomUsers?.map((u) => ({
-        ...u,
-        isFriend: friendIds.includes(u.clerkId),
-      }));
-
-      return usersWithStatus;
-    },
-    enabled: !!user,
-  });
-
-  const { mutate: addFriend } = useMutation({
-    mutationKey: ["addFriend"],
-    mutationFn: ({
-      currentUserId,
-      friendClerk_id,
-    }: {
-      currentUserId: string;
-      friendClerk_id: string;
-    }) => addFriends(currentUserId, friendClerk_id),
-  });
+  const { users, isLoading } = useAddfriends(user);
+  const addFriend = useAddfriend();
 
   const handleAddFriend = (id: string) => {
     if (!user?.id) return;

@@ -1,5 +1,5 @@
 import supabase from "./supabase";
-import type { Friend, FriendRow, User } from "./types";
+import type { AddedFriend, Friend, FriendRow, User } from "./types";
 
 export const syncUserToSupabase = async (user: User | null | undefined) => {
   if (!user) return;
@@ -23,7 +23,7 @@ export const syncUserToSupabase = async (user: User | null | undefined) => {
         email: user.emailAddresses[0].emailAddress,
         username: user.username,
         clerkId: user.id,
-        image: pic,
+        image: user.imageUrl || pic,
       },
     ]);
 
@@ -64,11 +64,6 @@ export const addFriends = async (userId: string, friendClerk_id: string) => {
   if (!addedFriend) throw new Error("No friend data returned from Supabase");
 
   return addedFriend || [];
-};
-
-type AddedFriend = {
-  currentUserId: string;
-  otherFriendid: string;
 };
 
 export const checkIsFriend = async ({

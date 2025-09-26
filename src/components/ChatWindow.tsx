@@ -17,7 +17,7 @@ export default function ChatWindow({
     onSend();
   };
 
-  // 🔑 Auto scroll when messages change
+  // Auto scroll when messages change
   useEffect(() => {
     endOfMessagesRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -51,7 +51,7 @@ export default function ChatWindow({
           </div>
         ))}
 
-        {/* 👇 invisible div used as scroll target */}
+        {/* invisible div used as scroll target */}
         <div ref={endOfMessagesRef} />
       </div>
 

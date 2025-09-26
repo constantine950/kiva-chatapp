@@ -1,12 +1,11 @@
 import { ArrowLeftIcon } from "@heroicons/react/24/solid";
 import ChatWindow from "../components/ChatWindow";
-import { sendMessage } from "../lib/firebaseQueries";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { getFriendDetail } from "../lib/dbqueries";
 import { useNavigate, useParams } from "react-router";
 import { useUser } from "@clerk/clerk-react";
 import { useState } from "react";
 import { useLiveMessages } from "../lib/hooks/useLiveUpdate";
+import { useFriendDetail } from "../lib/hooks/useFriendDetail";
+import { useSendMessage } from "../lib/hooks/useSendMessage";
 
 export default function ChatDetail() {
   const [input, setInput] = useState("");
@@ -14,43 +13,9 @@ export default function ChatDetail() {
   const { id: friendId } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  const { data: friendDetail } = useQuery({
-    queryKey: ["friendDetail", friendId],
-    queryFn: () => getFriendDetail(friendId!),
-    enabled: !!friendId,
-  });
-
   const messages = useLiveMessages(user?.id, friendId);
-
-  const { mutate: sendMessages } = useMutation({
-    mutationKey: ["sendMessages"],
-    mutationFn: ({
-      senderId,
-      receiverId,
-      text,
-      userImg,
-      userName,
-      friendImg,
-      friendName,
-    }: {
-      senderId: string;
-      receiverId: string;
-      text: string;
-      userImg: string | undefined;
-      userName: string | undefined;
-      friendImg: string | undefined;
-      friendName: string | undefined;
-    }) =>
-      sendMessage(
-        senderId,
-        receiverId,
-        text,
-        userImg,
-        userName,
-        friendImg,
-        friendName
-      ),
-  });
+  const friendDetail = useFriendDetail(friendId);
+  const sendMessages = useSendMessage();
 
   const handleSend = () => {
     if (!input.trim() || !user?.id || !friendId) return;

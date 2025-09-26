@@ -5,7 +5,7 @@ export type User = {
   fullName: string | null;
   emailAddresses: { emailAddress: string }[];
   username: string | null;
-  image?: string;
+  imageUrl?: string;
 };
 
 export type Friend = {
@@ -14,6 +14,11 @@ export type Friend = {
     full_name: string;
     image: string;
   } | null;
+};
+
+export type AddedFriend = {
+  currentUserId: string;
+  otherFriendid: string;
 };
 
 export type FriendRow = {
@@ -32,6 +37,16 @@ export interface Message {
   text: string;
   createdAt: Date;
   conversationId: string;
+}
+
+export interface MessageProps {
+  senderId: string;
+  receiverId: string;
+  text: string;
+  userImg: string | undefined;
+  userName: string | undefined;
+  friendImg: string | undefined;
+  friendName: string | undefined;
 }
 
 export interface Conversation {
