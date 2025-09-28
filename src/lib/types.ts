@@ -1,5 +1,12 @@
 import type { RefObject } from "react";
 
+export type ThemeMode = "light" | "dark" | "system";
+
+export type ThemeType = {
+  mode: ThemeMode;
+  emailNotification: boolean;
+};
+
 export type User = {
   id: string;
   fullName: string | null;

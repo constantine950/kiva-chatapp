@@ -10,6 +10,8 @@ import ChatDetail from "./pages/ChatDetails";
 import { useUser } from "@clerk/clerk-react";
 import AddFriends from "./pages/AddFriends";
 import { useSync } from "./lib/hooks/useSync";
+import { useEffect } from "react";
+import { useAppSelector } from "./redux/hook/selectors";
 
 const router = createBrowserRouter([
   {
@@ -59,6 +61,53 @@ const router = createBrowserRouter([
 function App() {
   const { user } = useUser();
   useSync(user);
+
+  const mode = useAppSelector((state) => state.theme.mode);
+
+  console.log("Current theme mode:", mode); // Debug log
+
+  useEffect(() => {
+    const root = document.documentElement;
+    console.log("Applying theme for mode:", mode); // Debug log
+
+    const applyTheme = (theme: "dark" | "light") => {
+      console.log("Applying theme:", theme); // Debug log
+      root.classList.remove("dark", "light");
+      root.classList.add(theme);
+    };
+
+    if (mode === "dark") {
+      applyTheme("dark");
+    } else if (mode === "light") {
+      applyTheme("light");
+    } else {
+      const prefersDark = window.matchMedia(
+        "(prefers-color-scheme: dark)"
+      ).matches;
+      console.log("System prefers dark:", prefersDark); // Debug log
+      applyTheme(prefersDark ? "dark" : "light");
+    }
+  }, [mode]);
+
+  useEffect(() => {
+    if (mode !== "system") return;
+
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    console.log("Setting up system theme listener"); // Debug log
+
+    const handler = (e: MediaQueryListEvent) => {
+      console.log("System theme changed, prefers dark:", e.matches); // Debug log
+      const root = document.documentElement;
+      root.classList.remove("dark", "light");
+      root.classList.add(e.matches ? "dark" : "light");
+    };
+
+    mediaQuery.addEventListener("change", handler);
+    return () => {
+      console.log("Cleaning up system theme listener"); // Debug log
+      mediaQuery.removeEventListener("change", handler);
+    };
+  }, [mode]);
 
   return <RouterProvider router={router} />;
 }

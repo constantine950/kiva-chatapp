@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
-import navReducer from "./redux/navSlice";
+import navReducer from "./redux/slice/navSlice";
+import themeReducer from "./redux/slice/themeSlice";
 
 const store = configureStore({
   reducer: {
     nav: navReducer,
+    theme: themeReducer,
   },
 });
 

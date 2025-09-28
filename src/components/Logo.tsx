@@ -1,6 +1,6 @@
 import { Link } from "react-router";
-import { useAppDispatch } from "../redux/hooks";
-import { setMenuOpen } from "../redux/navSlice";
+import { setMenuOpen } from "../redux/slice/navSlice";
+import { useAppDispatch } from "../redux/hook/selectors";
 
 export default function Logo() {
   const dispatch = useAppDispatch();

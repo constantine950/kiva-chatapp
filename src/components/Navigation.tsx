@@ -1,9 +1,9 @@
-import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { setMenuOpen, toggleMenu } from "../redux/navSlice";
+import { setMenuOpen, toggleMenu } from "../redux/slice/navSlice";
 import { useEffect, useRef, type RefObject } from "react";
 import MobileNav from "./MobileNav";
 import DestopNav from "./DestopNav";
 import MobileMenuButton from "./MobileMenuButton";
+import { useAppDispatch, useAppSelector } from "../redux/hook/selectors";
 
 export default function Navigation() {
   const menuRef = useRef<HTMLDivElement>(null);
