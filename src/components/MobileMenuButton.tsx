@@ -10,12 +10,19 @@ export default function MobileMenuButton({
     <div className="md:hidden flex items-center">
       <SignedIn>
         <div className="pt-2">
-          <UserButton />
+          <UserButton
+            appearance={{
+              elements: {
+                avatarBox:
+                  "w-8 h-8 border border-gray-300 dark:border-gray-600 rounded-full",
+              },
+            }}
+          />
         </div>
       </SignedIn>
       <button
         onClick={handleToggle}
-        className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-[#3190F8] focus:outline-none"
+        className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 dark:text-gray-100 hover:text-[#3190F8] focus:outline-none transition-colors duration-300"
       >
         {isMenuOpen ? (
           <XMarkIcon className="h-7 w-7 cursor-pointer" />

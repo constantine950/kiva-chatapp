@@ -25,7 +25,9 @@ export default function AddFriends() {
 
   return (
     <div className="pt-20 px-4 sm:px-6 lg:px-8 max-w-2xl mx-auto">
-      <h2 className="text-xl font-semibold mb-6">Discover Friends</h2>
+      <h2 className="text-xl font-semibold mb-6 text-gray-800 dark:text-gray-200">
+        Discover Friends
+      </h2>
 
       {isLoading ? (
         <Spinner />
@@ -37,7 +39,7 @@ export default function AddFriends() {
             return (
               <li
                 key={user.id}
-                className="flex items-center justify-between p-4 bg-white shadow rounded-lg"
+                className="flex items-center justify-between p-4 bg-white dark:bg-gray-800 shadow rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
               >
                 <div className="flex items-center gap-3">
                   <img
@@ -46,8 +48,12 @@ export default function AddFriends() {
                     className="w-10 h-10 rounded-full object-cover"
                   />
                   <div>
-                    <p className="font-medium">{user.full_name}</p>
-                    <p className="text-sm text-gray-500">{user.email}</p>
+                    <p className="font-medium text-gray-800 dark:text-gray-100">
+                      {user.full_name}
+                    </p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      {user.email}
+                    </p>
                   </div>
                 </div>
                 {isFriend || user.isFriend ? (

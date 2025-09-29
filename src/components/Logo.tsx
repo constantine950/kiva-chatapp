@@ -8,9 +8,14 @@ export default function Logo() {
   function handleClick() {
     dispatch(setMenuOpen(false));
   }
+
   return (
-    <Link to="/" onClick={handleClick}>
-      <img className="h-7" src="/kivaa.png" />
+    <Link to="/" onClick={handleClick} className="flex items-center">
+      <img
+        className="h-7 dark:brightness-90 transition"
+        src="/kivaa.png"
+        alt="Kivaa Logo"
+      />
     </Link>
   );
 }

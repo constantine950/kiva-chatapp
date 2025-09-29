@@ -12,7 +12,7 @@ export default function Chat() {
   if (!user) return <NoUser />;
 
   return (
-    <div className="pt-20 h-[calc(100vh-5rem)] flex flex-col md:flex-row">
+    <div className="pt-20 h-[calc(100vh-5rem)] flex flex-col md:flex-row bg-gray-50 dark:bg-gray-900">
       {/* Mobile: only list, unless a chat is opened */}
       {!isChatDetailRoute && (
         <div className="block md:hidden w-full">
@@ -21,7 +21,7 @@ export default function Chat() {
       )}
 
       {/* Desktop view always shows chat list */}
-      <div className="hidden md:block w-full md:w-1/3 lg:w-1/4 border-r bg-white overflow-y-auto">
+      <div className="hidden md:block w-full md:w-1/3 lg:w-1/4 border-r bg-white dark:bg-gray-800 dark:border-gray-700 overflow-y-auto">
         <ChatList />
       </div>
 
@@ -30,7 +30,7 @@ export default function Chat() {
         {isChatDetailRoute ? (
           <Outlet />
         ) : (
-          <div className="hidden md:flex h-full justify-center items-center text-gray-500 text-lg">
+          <div className="hidden md:flex h-full justify-center items-center text-gray-500 dark:text-gray-400 text-lg">
             <NoChatSelected />
           </div>
         )}

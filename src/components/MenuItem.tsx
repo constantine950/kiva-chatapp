@@ -8,7 +8,9 @@ export default function MenuItem({ item, className, onClick }: MenuItemProps) {
     <Link
       to={item.link}
       className={`${className} ${
-        pathName.pathname === item.link ? "text-[#3190F8]" : "text-gray-900"
+        pathName.pathname === item.link
+          ? "text-[#3190F8]"
+          : "text-gray-900 dark:text-gray-100"
       }`}
       onClick={onClick}
     >

@@ -6,7 +6,11 @@ export default function FriendList(friend: Friend) {
     <Link
       to={`/dashboard/chat/${friend.friendClerk_id}`}
       key={friend.friendClerk_id}
-      className="flex items-center justify-between p-4 bg-white shadow rounded-lg"
+      className="flex items-center justify-between p-4 
+                 bg-white dark:bg-gray-800 
+                 shadow rounded-lg 
+                 hover:bg-gray-50 dark:hover:bg-gray-700 
+                 transition-colors"
     >
       <div className="flex items-center gap-3">
         <img
@@ -15,7 +19,9 @@ export default function FriendList(friend: Friend) {
           alt={friend.Users?.full_name}
         />
         <div>
-          <p className="font-medium">{friend.Users?.full_name}</p>
+          <p className="font-medium text-gray-800 dark:text-gray-100">
+            {friend.Users?.full_name}
+          </p>
         </div>
       </div>
       <button className="text-sm text-blue-500 hover:underline">Message</button>

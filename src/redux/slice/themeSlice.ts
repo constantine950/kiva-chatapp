@@ -1,12 +1,5 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-// import type { ThemeType, ThemeMode } from "../../lib/types";
-
-export type ThemeMode = "light" | "dark" | "system";
-
-export type ThemeType = {
-  mode: ThemeMode;
-  emailNotification: boolean;
-};
+import type { ThemeType, ThemeMode } from "../../lib/types";
 
 const savedTheme = localStorage.getItem("theme") as ThemeMode | null;
 

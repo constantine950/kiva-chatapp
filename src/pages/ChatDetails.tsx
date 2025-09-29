@@ -34,12 +34,12 @@ export default function ChatDetail() {
   };
 
   return (
-    <div className="h-full flex flex-col bg-gray-50 overflow-hidden">
+    <div className="h-full flex flex-col bg-gray-50 dark:bg-gray-900 overflow-hidden">
       {/* Header */}
-      <div className="flex items-center gap-3 px-4 py-3 border-b bg-white shrink-0">
+      <div className="flex items-center gap-3 px-4 py-3 border-b bg-white dark:bg-gray-800 dark:border-gray-700 shrink-0">
         <button
           onClick={() => navigate("/dashboard/chat")}
-          className="block md:hidden p-1 text-gray-500 hover:text-gray-700"
+          className="block md:hidden p-1 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
         >
           <ArrowLeftIcon className="w-5 h-5" />
         </button>
@@ -49,7 +49,9 @@ export default function ChatDetail() {
           className="w-10 h-10 rounded-full"
         />
         <div>
-          <p className="font-medium">{friendDetail?.full_name}</p>
+          <p className="font-medium text-gray-800 dark:text-gray-100">
+            {friendDetail?.full_name}
+          </p>
           <p className="text-sm text-green-500">Active now</p>
         </div>
       </div>

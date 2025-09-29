@@ -13,12 +13,14 @@ export default function Friends() {
 
   return (
     <div className="pt-20 px-4 sm:px-6 lg:px-8 max-w-2xl mx-auto">
-      <h2 className="text-xl font-semibold mb-6">Your Friends</h2>
+      <h2 className="text-xl font-semibold mb-6 text-gray-800 dark:text-gray-200">
+        Your Friends
+      </h2>
 
       {isLoading ? (
         <Spinner />
       ) : friends?.length === 0 ? (
-        <div className="text-center text-gray-600 space-y-4">
+        <div className="text-center text-gray-600 dark:text-gray-400 space-y-4">
           <p>You haven’t added any friends yet.</p>
           <Link
             to="/dashboard/addfriends"

@@ -36,7 +36,7 @@ const sections = [
 export default function Dashboard() {
   return (
     <div className="pt-20 px-4 sm:px-6 lg:px-8">
-      <h1 className="text-2xl font-bold mb-6 text-gray-800">
+      <h1 className="text-2xl font-bold mb-6 text-gray-800 dark:text-gray-100">
         Dashboard Overview
       </h1>
       <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
@@ -44,16 +44,18 @@ export default function Dashboard() {
           <Link
             to={section.link}
             key={section.title}
-            className="bg-white shadow-md hover:shadow-lg transition-shadow rounded-2xl p-6 flex flex-col gap-3 border border-gray-100"
+            className="bg-white dark:bg-gray-800 shadow-md hover:shadow-lg transition-shadow rounded-2xl p-6 flex flex-col gap-3 border border-gray-100 dark:border-gray-700"
           >
             <div className="flex items-center gap-3">
               {section.icon}
-              <h2 className="text-lg font-semibold text-gray-700">
+              <h2 className="text-lg font-semibold text-gray-700 dark:text-gray-200">
                 {section.title}
               </h2>
             </div>
-            <p className="text-sm text-gray-500">{section.description}</p>
-            <span className="text-sm text-blue-600 mt-auto hover:underline">
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              {section.description}
+            </p>
+            <span className="text-sm text-blue-600 dark:text-blue-400 mt-auto hover:underline">
               Go to {section.title}
             </span>
           </Link>

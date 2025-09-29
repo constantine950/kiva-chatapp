@@ -7,7 +7,7 @@ export default function MobileNav({ menuRef, handleToggle }: MobileNavProp) {
   return (
     <div
       ref={menuRef}
-      className="md:hidden absolute top-full left-0 right-0 bg-white shadow-md z-50"
+      className="md:hidden absolute top-full left-0 right-0 bg-white dark:bg-gray-900 shadow-md z-50 transition-colors duration-300"
     >
       <div className="px-5 py-3 space-y-1">
         {items.map((item) => (
@@ -15,19 +15,19 @@ export default function MobileNav({ menuRef, handleToggle }: MobileNavProp) {
             onClick={handleToggle}
             key={item.id}
             item={item}
-            className="block px-3 py-2 rounded-md text-base font-medium  hover:text-[#3190F8] hover:bg-gray-50"
+            className="block px-3 py-2 rounded-md text-base font-medium hover:text-[#3190F8] hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-300"
           />
         ))}
 
         <SignedOut>
-          <div className="pt-4 pb-2 border-t border-gray-200 space-y-3">
+          <div className="pt-4 pb-2 border-t border-gray-200 dark:border-gray-700 space-y-3 transition-colors duration-300">
             <SignInButton mode="modal">
-              <button className="w-full bg-[#3190F8] hover:bg-blue-600 text-white px-4 py-2 rounded-md text-base font-medium transition-colors duration-300">
+              <button className="w-full bg-blue-500 hover:bg-blue-600 dark:bg-blue-400 dark:hover:bg-blue-500 text-white px-4 py-2 rounded-md text-base font-medium transition-colors duration-300">
                 Login
               </button>
             </SignInButton>
             <SignUpButton mode="modal">
-              <button className="w-full border-2 hover:bg-gray-100 border-gray-400 px-3 py-1.5 rounded-md text-base font-medium transition-colors duration-300">
+              <button className="w-full border-2 border-gray-400 dark:border-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700  text-gray-900 dark:text-gray-100 px-3 py-1.5 rounded-md text-base font-medium transition-colors duration-300">
                 Sign Up
               </button>
             </SignUpButton>
