@@ -65,6 +65,12 @@ function App() {
   const mode = useAppSelector((state) => state.theme.mode);
 
   useEffect(() => {
+    if ("Notification" in window && Notification.permission === "granted") {
+      Notification.requestPermission();
+    }
+  }, []);
+
+  useEffect(() => {
     const root = document.documentElement;
 
     const applyTheme = (theme: "dark" | "light") => {

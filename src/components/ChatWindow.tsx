@@ -22,6 +22,26 @@ export default function ChatWindow({
     endOfMessagesRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  const prevMessagesRef = useRef(messages);
+
+  useEffect(() => {
+    if (messages.length > prevMessagesRef.current.length) {
+      const lastMessage = messages[messages.length - 1];
+
+      // Only show if it's not the current user
+      if (lastMessage.senderId !== user?.id) {
+        // Check if permission is granted
+        if (Notification.permission === "granted") {
+          new Notification("New Message 💬", {
+            body: `${lastMessage.senderId}: ${lastMessage.text}`,
+            icon: "/kivaa.png",
+          });
+        }
+      }
+    }
+    prevMessagesRef.current = messages;
+  }, [messages, user]);
+
   return (
     <div className="flex flex-col h-full bg-gray-50 dark:bg-gray-900">
       {/* Messages list */}

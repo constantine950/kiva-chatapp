@@ -35,7 +35,7 @@ const sections = [
 
 export default function Dashboard() {
   return (
-    <div className="pt-20 px-4 sm:px-6 lg:px-8">
+    <div className="pt-20 pb-5 px-4 sm:px-6 lg:px-8">
       <h1 className="text-2xl font-bold mb-6 text-gray-800 dark:text-gray-100">
         Dashboard Overview
       </h1>
